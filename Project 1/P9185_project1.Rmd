@@ -218,10 +218,10 @@ endpoints.PK.bvial <- endpoints.PK %>% filter(measure == "bvial")
 endpoints.PK.svial <- endpoints.PK %>% filter(measure == "svial")
 
 #model.PK.bviral <- lmer(dvalue ~  drug + period + A_lag + B_lag + C_lag + Adhere_sum + AE_ind + (1|ptid), data = endpoints.PK.bvial)
-summary(model.PK.bviral)
+#summary(model.PK.bviral)
 
 #model.PK.sviral <- lmer(dvalue ~  drug + period + A_lag + B_lag + C_lag + Adhere_sum + AE_ind + (1|ptid), data = endpoints.PK.svial)
-summary(model.PK.sviral)
+#summary(model.PK.sviral)
 
 # Combinging two measures into one model
 model.PK<- lmer(dvalue ~  drug + period + A_lag + B_lag + C_lag + Adhere_sum + AE_ind + measure + (1|ptid) , data = endpoints.PK)
