@@ -62,6 +62,71 @@ vload_df %>%
                             "4" = "Washout 2", "5" = "Trt 3",
                             "6" = "Washout 3"))+
   theme(axis.text.x = element_text(angle = 30, vjust = 0.7))+
-  ggtitle("Observed Viral Load & Remaining Effects")
+  ggtitle("Observed Viral Load & Corresponding Remaining Effects")
 
+#not really plotting observed rhos, just facet by seq2
+#maybe need to change facet titles
+
+```
+
+```{r}
+endpoints.Adhere %>% 
+  # each line is adherence of a drug taken by a subject
+  ggplot(aes(x = week, y = Adhere,group = interaction(ptid, drug))) +
+  geom_line(alpha = 0.2) + 
+  geom_point(alpha = 0.1, size = 0.8)+
+  facet_grid(.~drug)+
+  theme_bw() +
+  ggtitle("Adherence by Drug Over Weeks")
+
+```
+
+```{r}
+endpoints.Adhere %>%
+  ggplot(aes(x = week, y = Adhere,group = interaction(ptid, drug))) +
+  geom_line(alpha = 0.2) + 
+  geom_point(alpha = 0.1, size = 0.8) +
+  facet_grid(.~factor(drug_lag, levels=c('None','Pill A','Gel B','Gel C')))+
+  theme_bw() +
+  ggtitle("Adherence by Remaining Effects Over Weeks")
+```
+
+```{r}
+Adhere.demo.week <- left_join(Adhere.demo, endpoints.Adhere, by = "ptid") 
+```
+
+```{r}
+Adhere.demo.week %>%
+  ggplot(aes(x = week, y = Adhere,group = interaction(ptid, drug))) +
+  geom_line(alpha = 0.2) + 
+  geom_point(alpha = 0.1, size = 0.8) +
+  facet_grid(.~factor(race, levels=c('black','white','others')))+
+  theme_bw() +
+  ggtitle("Adherence by Race Over Weeks")
+```
+
+```{r}
+Adhere.demo %>%
+  ggplot(aes(y = Adhere_total, x = factor(race, levels=c('black','white','others'))))+
+  geom_boxplot()+
+  theme_bw()+
+  xlab("Race")+
+  ggtitle("Total Adherence by Race")
+```
+
+```{r}
+Adhere.demo %>%
+  ggplot(aes(y = Adhere_total, x = age))+
+  geom_point()+
+  theme_bw()+
+  ggtitle("Total Adherence by Age")
+```
+
+```{r}
+Adhere.demo %>%
+  mutate(gender = if_else(gender == 0, "male", "female"))%>%
+  ggplot(aes(y = Adhere_total, x = gender))+
+  geom_boxplot()+
+  theme_bw()+
+  ggtitle("Total Adherence by Gender")
 ```
