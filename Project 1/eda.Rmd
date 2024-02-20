@@ -222,9 +222,9 @@ endpoints.AE %>%
   geom_bar()+
   facet_grid(factor(drug, levels=c('Pill A','Gel B','Gel C'))~.)+
   theme_bw()+
-  ylab("Count of Subjects")+
+  ylab("Number of Subjects")+
   xlab("Week Number")+
-  ggtitle("Count of Subjects Who Had AE")
+  ggtitle("Number of Subjects Who Had AE")
 
 # it's a balanced design, so can compare count value
 ```
@@ -234,9 +234,9 @@ endpoints.AE %>%
   ggplot(aes(x=factor(drug, levels=c('Pill A','Gel B','Gel C'))))+
   geom_bar()+
   theme_bw()+
-  ylab("Count of Subjects")+
+  ylab("Number of Subjects")+
   xlab("Drug")+
-  ggtitle("Count of Subjects Who Had AE")
+  ggtitle("Number of Subjects Who Had AE")
 
 ```
 
@@ -246,8 +246,8 @@ endpoints.AE %>%
   ggplot(aes(x=factor(drug_lag, levels=c('None','Pill A','Gel B','Gel C'))))+
   geom_bar()+
   theme_bw()+
-  ylab("Count of Subjects")+
+  ylab("Number of Subjects")+
   xlab("Previous Drug Taken")+
-  ggtitle("Count of Subjects Who Had AE")
+  ggtitle("Number of Subjects Who Had AE")
 
 ```
