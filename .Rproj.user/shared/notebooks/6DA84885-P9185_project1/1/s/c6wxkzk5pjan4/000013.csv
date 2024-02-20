@@ -1,8 +1,0 @@
-"0","# AE response"
-"0","traj.Adhere <-"
-"0","  endpoints.Adhere %>% "
-"0","  ggplot(aes(x = total_week, y = Adhere)) +"
-"0","  geom_line(alpha = 0.2, aes(group = factor(ptid))) + "
-"0","  geom_point(alpha = 0.1, size = 0.8)"
-"0",""
-"0","traj.Adhere"

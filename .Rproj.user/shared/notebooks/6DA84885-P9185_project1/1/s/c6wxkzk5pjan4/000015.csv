@@ -1,2 +1,0 @@
-"0",""
-"0","xyplot(Adhere ~ period, endpoints.Adhere, type=c('g','p','l'))"

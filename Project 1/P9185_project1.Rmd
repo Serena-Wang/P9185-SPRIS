@@ -14,6 +14,7 @@ library(tidyverse)
 library(lme4)
 library(nlme)
 library(lattice)
+library(gtsummary)
 ```
 
 ```{r}
@@ -101,7 +102,8 @@ endpoints.lag <-
     A_lag = ifelse(drug_lag == "Pill A", 1, 0),
     B_lag = ifelse(drug_lag == "Gel B", 1, 0),
     C_lag = ifelse(drug_lag == "Gel C", 1, 0)
-  )
+  )%>% 
+  mutate(drug = factor(drug, levels = c("Pill A", "Gel B", "Gel C")))
 
 endpoints.period <- left_join(endpoints.period, endpoints.lag)
 
@@ -119,7 +121,8 @@ endpoints.AE.weeksum <-
   ungroup() %>% 
   mutate(AE_ind = as.factor(ifelse(AE_sum > 0, 1, 0))) %>% 
   select(-AE) %>% 
-  distinct()
+  distinct() %>% 
+  mutate(drug = factor(drug, levels = c("Pill A", "Gel B", "Gel C")))
 
 endpoints.Adhere <-
   endpoints.Adhere %>% 
@@ -158,12 +161,47 @@ summary(model.AE.1)
 
 model.AE.lag <- glmer(AE_ind ~ drug + period + A_lag + B_lag + C_lag + (1|ptid), data = endpoints.AE.weeksum, family = binomial)
 summary(model.AE.lag)
+
+tbl.AE.lag <- 
+  model.AE.lag %>% 
+  tbl_regression(
+    estimate_fun = function(x) style_number(x, digits = 3), 
+    exponentiate = T,
+    label = list(
+      drug ~ "Treatment",
+      period ~ "Period",
+      A_lag ~ "lag(Treatment) = Pill A",
+      B_lag ~ "lag(Treatment) = Gel B",
+      C_lag ~ "lag(Treatment) = Gel C"
+    ))
+
+# Convert tbl_regression to gt for more flexible handling
+gt.AE.lag <- tbl.AE.lag %>% as_gt()
+gt::gtsave(gt.AE.lag, file = "./image/tbl_AE_lag.png")
 ```
 
 
 ```{r model_adhere}
-model.Adhere.1 <- glmer(cbind(Adhere, nonAdhere) ~ period + week + drug + A_lag + B_lag + C_lag + (1|ptid), data = endpoints.Adhere, family = binomial, nAGQ = 10)
+model.Adhere.1 <- glmer(cbind(Adhere, nonAdhere) ~ period + week + drug + A_lag + B_lag + C_lag + (1|ptid), data = endpoints.Adhere, family = binomial, nAGQ = 5)
 summary(model.Adhere.1)
+
+tbl.Adhere.1 <- 
+  model.Adhere.1 %>% 
+  tbl_regression(
+    estimate_fun = function(x) style_number(x, digits = 3), 
+    exponentiate = T,
+    label = list(
+      week ~ "Week",
+      drug ~ "Treatment",
+      period ~ "Period",
+      A_lag ~ "lag(Treatment) = Pill A",
+      B_lag ~ "lag(Treatment) = Gel B",
+      C_lag ~ "lag(Treatment) = Gel C"
+    ))
+
+# Convert tbl_regression to gt for more flexible handling
+gt.Adhere.1 <- tbl.Adhere.1 %>% as_gt()
+gt::gtsave(gt.Adhere.1, file = "./image/tbl_Adhere_1.png")
 ```
 
 ```{r eda_PK}

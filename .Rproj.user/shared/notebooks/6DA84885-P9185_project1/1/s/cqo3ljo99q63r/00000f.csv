@@ -1,14 +1,4 @@
-"0","endpoints.AE.weeksum <- "
-"0","  endpoints.AE %>% "
-"0","  select(-week) %>% "
-"0","  group_by(ptid,drug,period) %>% "
-"0","  mutate(AE_sum  = sum(AE)) %>% "
-"0","  ungroup() %>% "
-"0","  mutate(AE_ind = as.factor(ifelse(AE_sum > 0, 1, 0))) %>% "
-"0","  select(-AE) %>% "
-"0","  distinct()"
-"0",""
-"0","endpoints.Adhere <-"
-"0","  endpoints.Adhere %>% "
-"0","  mutate(total_week = period*week,"
-"0","         nonAdhere = 7-Adhere)"
+"0","```{r}
+"
+"2","Error: attempt to use zero-length variable name
+"
