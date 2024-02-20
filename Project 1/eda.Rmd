@@ -111,16 +111,41 @@ Adhere.demo %>%
   ggplot(aes(y = Adhere_total, x = factor(race, levels=c('black','white','others'))))+
   geom_boxplot()+
   theme_bw()+
+  ylab("# of Adherence Days")+
   xlab("Race")+
   ggtitle("Total Adherence by Race")
+```
+
+
+```{r}
+Adhere.demo %>%
+  ggplot(aes(y = Adhere_total/84, x = factor(race, levels=c('black','white','others'))))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("Adherence Rate")+
+  xlab("Race")+
+  ggtitle("Overall Adherence Rate by Race")
 ```
 
 ```{r}
 Adhere.demo %>%
   ggplot(aes(y = Adhere_total, x = age))+
   geom_point()+
+  geom_hline(yintercept = 84, linetype = 2, color = "grey")+
   theme_bw()+
+  ylab("# of Adherence Days")+
+  xlab("Age")+
   ggtitle("Total Adherence by Age")
+```
+```{r}
+Adhere.demo %>%
+  ggplot(aes(y = Adhere_total/84, x = age))+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+  theme_bw()+
+  ylab("Adherence Rate")+
+  xlab("Age")+
+  ggtitle(label = "Overall Adherence Rate by Age")
 ```
 
 ```{r}
@@ -129,8 +154,65 @@ Adhere.demo %>%
   ggplot(aes(y = Adhere_total, x = gender))+
   geom_boxplot()+
   theme_bw()+
+  ylab("# of Adherence Days")+
+  xlab("Gender")+
   ggtitle("Total Adherence by Gender")
 ```
+
+```{r}
+Adhere.demo %>%
+  mutate(gender = if_else(gender == 0, "male", "female"))%>%
+  ggplot(aes(y = Adhere_total/84, x = gender))+
+  geom_boxplot()+
+  theme_bw()+
+  ylab("Adherence Rate")+
+  xlab("Gender")+
+  ggtitle("Overall Adherence Rate by Gender")
+```
+
+```{r}
+Adhere.demo %>%
+  mutate(gender = if_else(gender == 0, "male", "female"))%>%
+  ggplot(aes(y = Adhere_total/84, x = age))+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+  geom_smooth(color="blue", method="loess")+
+  facet_grid(.~gender)+
+  theme_bw()+
+  ylab("Adherence Rate")+
+  xlab("Age")+
+  ggtitle(label = "Overall Adherence Rate by Age & Gender", subtitle = "With Loess Smoothing and 95% CI")
+```
+
+```{r}
+Adhere.demo %>%
+  mutate(race = factor(race, levels=c('black','white','others')))%>%
+  ggplot(aes(y = Adhere_total/84, x = age))+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+  geom_smooth(color="blue", method="loess")+
+  facet_grid(.~race)+
+  theme_bw()+
+  ylab("Adherence Rate")+
+  xlab("Age")+
+  ggtitle(label = "Overall Adherence Rate by Age & Race", subtitle = "With Loess Smoothing and 95% CI")
+```
+
+```{r}
+ Adhere.demo %>%
+  mutate(race = factor(race, levels=c('black','white','others')),
+         gender = if_else(gender == 0, "male", "female"))%>%
+  ggplot(aes(y = Adhere_total/84, x = age))+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+  geom_smooth(color="blue", method="loess")+
+  facet_grid(gender~race)+
+  theme_bw()+
+  ylab("Adherence Rate")+
+  xlab("Age")+
+  ggtitle(label = "Overall Adherence Rate by Age & Race & Gender", subtitle = "With Loess Smoothing and 95% CI")
+```
+
 
 ```{r}
 endpoints.AE %>% 
