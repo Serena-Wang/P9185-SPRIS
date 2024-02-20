@@ -12,6 +12,7 @@ library(lme4)
 library(nlme)
 library(lattice)
 library(ggplot2)
+library(forcats)
 ```
 
 ```{r}
@@ -129,4 +130,42 @@ Adhere.demo %>%
   geom_boxplot()+
   theme_bw()+
   ggtitle("Total Adherence by Gender")
+```
+
+```{r}
+endpoints.AE %>% 
+  filter(AE ==1) %>%
+  group_by(drug, week) %>%
+  ggplot(aes(x=week))+
+  geom_bar()+
+  facet_grid(factor(drug, levels=c('Pill A','Gel B','Gel C'))~.)+
+  theme_bw()+
+  ylab("Count of Subjects")+
+  xlab("Week Number")+
+  ggtitle("Count of Subjects Who Had AE")
+
+# it's a balanced design, so can compare count value
+```
+```{r}
+endpoints.AE %>% 
+  filter(AE ==1) %>%
+  ggplot(aes(x=factor(drug, levels=c('Pill A','Gel B','Gel C'))))+
+  geom_bar()+
+  theme_bw()+
+  ylab("Count of Subjects")+
+  xlab("Drug")+
+  ggtitle("Count of Subjects Who Had AE")
+
+```
+
+```{r}
+endpoints.AE %>% 
+  filter(AE ==1) %>%
+  ggplot(aes(x=factor(drug_lag, levels=c('None','Pill A','Gel B','Gel C'))))+
+  geom_bar()+
+  theme_bw()+
+  ylab("Count of Subjects")+
+  xlab("Previous Drug Taken")+
+  ggtitle("Count of Subjects Who Had AE")
+
 ```
