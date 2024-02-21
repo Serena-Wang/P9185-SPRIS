@@ -251,3 +251,52 @@ endpoints.AE %>%
   ggtitle("Number of Subjects Who Had AE")
 
 ```
+
+```{r}
+# endpoints.PK %>%
+#   ggplot(aes(y=dvalue, x=period,color = drug)) +
+#   geom_line(alpha = 0.2,aes(group = factor(ptid)))+
+#   geom_point(alpha = 0.1, size = 0.8)+
+#   facet_grid(measure~seq2)+
+#   theme_bw()
+```
+
+```{r}
+ endpoints.PK %>%
+  mutate(measure = if_else(measure == "bvial", "blood", "skin")) %>%
+  ggplot(aes(y=dvalue, x=factor(drug_lag, levels=c('None','Pill A','Gel B','Gel C'))))+
+  geom_boxplot()+
+  facet_grid(.~measure)+
+  xlab("Previous Drug Taken")+
+  ylab("Viral Load Difference")+
+  theme_bw()
+ggtitle("Viral Load Difference vs. Previous Drug")
+```
+
+```{r}
+ endpoints.PK %>%
+  mutate(measure = if_else(measure == "bvial", "blood", "skin")) %>%
+  ggplot(aes(y=dvalue, x=drug))+
+  geom_boxplot()+
+  facet_grid(AE_ind~measure)+
+  theme_bw()+
+  ylab("Viral Load Difference")+
+  xlab("Drug")+
+  ggtitle("Viral Load Difference vs. Adverse Event")
+```
+
+```{r}
+ endpoints.PK %>%
+  group_by(drug, measure, Adhere_sum) %>%
+  summarise(dvalue = mean(dvalue)) %>%
+  mutate(measure = if_else(measure == "bvial", "blood", "skin")) %>%
+  ggplot(aes(y=dvalue, x=Adhere_sum))+
+  geom_point(size=0.8)+
+  geom_smooth(method = "lm", se = FALSE, show.legend = FALSE) +
+  facet_grid(drug~measure)+
+  xlab("# of Adherence Days/Period")+
+  ylab("Mean Viral Load Difference")+
+  ggtitle("Viral Load Difference vs. Adherence")+
+  theme_bw()
+```
+
