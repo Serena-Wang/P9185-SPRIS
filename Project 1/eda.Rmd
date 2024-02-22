@@ -252,6 +252,40 @@ endpoints.AE %>%
 
 ```
 
+
+```{r}
+endpoints.AE %>% 
+  filter(AE ==1) %>%
+  group_by(period,drug) %>%
+  summarise(count = n_distinct(ptid)) %>%
+  ggplot(aes(x=period, y=count))+
+  geom_point()+
+  geom_line()+
+  facet_grid(.~factor(drug, levels=c('Pill A','Gel B','Gel C')))+
+  theme_bw()+
+  ylab("Number of Subjects")+
+  xlab("Period")+
+  ggtitle("Number of Subjects Who Had AE")
+
+```
+
+```{r}
+set.seed(202)
+endpoints.AE.weeksum %>% 
+  filter(ptid %in% sample.int(180, 5))%>%
+  ggplot(aes(x=period, y=AE_ind, group =interaction(ptid, drug)))+
+  geom_point(aes(color=factor(drug, levels=c('Pill A','Gel B','Gel C'))))+
+  geom_line(aes(group = ptid))+
+  facet_grid(.~ptid)+
+  theme_bw()+
+  ylab("AE Indicator")+
+  xlab("Period")+
+  ggtitle("AE Record of 5 Randomly Selected Subjects")+
+  theme(legend.position = "bottom")+
+  guides(color=guide_legend(title="Drug"))
+
+```
+
 ```{r}
 # endpoints.PK %>%
 #   ggplot(aes(y=dvalue, x=period,color = drug)) +
