@@ -306,6 +306,18 @@ endpoints.AE.weeksum %>%
   theme_bw()
 ggtitle("Viral Load Difference vs. Previous Drug")
 ```
+```{r}
+ endpoints.PK %>%
+  mutate(measure = if_else(measure == "bvial", "blood", "skin")) %>%
+  ggplot(aes(y=dvalue, x=factor(drug, levels=c('Pill A','Gel B','Gel C'))))+
+  geom_boxplot()+
+  facet_grid(.~measure)+
+  xlab("Drug")+
+  ylab("Viral Load Difference")+
+  theme_bw()+
+  ggtitle("Viral Load Difference vs. Drug")
+```
+
 
 ```{r}
  endpoints.PK %>%
@@ -333,4 +345,3 @@ ggtitle("Viral Load Difference vs. Previous Drug")
   ggtitle("Viral Load Difference vs. Adherence")+
   theme_bw()
 ```
-
