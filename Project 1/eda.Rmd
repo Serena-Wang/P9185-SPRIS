@@ -210,6 +210,173 @@ Adhere.demo %>%
 
 
 ```{r}
+# endpoints.PK %>%
+#   mutate(product_type = if_else(drug=="Pill A", "Drug", "Gel"),
+#          regimen = if_else(drug== "Gel B", "3 times/day", "1 time/day"),
+#          product_dosage = case_when(
+#            drug == "Pill A" ~ "Drug, 1 time/day",
+#            drug == "Gel B" ~ "Gel, 3 times/day",
+#            drug == "Gel C" ~"Gel, 1 time/day"
+#          )) %>%
+#   ggplot(aes(y = Adhere_rate, x = age))+
+#   #geom_boxplot()+
+#   geom_point()+
+#   geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+#   geom_smooth(color="blue", method="loess")+
+#   facet_grid(gender~product_dosage)+
+#   theme_bw()+
+#   ylab("Adherence Rate of a Treatment Period")+
+#   xlab("Age")+
+#   ggtitle(label = "Adherence Rate by Product & Regimen", subtitle = "With Loess Smoothing and 95% CI")
+#   
+```
+```{r}
+# endpoints.PK %>%
+#   mutate(product_type = if_else(drug=="Pill A", "Drug", "Gel"),
+#          regimen = if_else(drug== "Gel B", "3 times/day", "1 time/day"),
+#          product_dosage = case_when(
+#            drug == "Pill A" ~ "Drug, 1 time/day",
+#            drug == "Gel B" ~ "Gel, 3 times/day",
+#            drug == "Gel C" ~"Gel, 1 time/day"
+#          )) %>%
+#   ggplot(aes(y = Adhere_rate, x = race))+
+#   geom_boxplot()+
+#   facet_grid(gender~product_dosage)+
+#   theme_bw()+
+#   ylab("Adherence Rate of a Treatment Period")+
+#   xlab("Race")+
+#   ggtitle(label = "Adherence Rate by Product & Regimen", subtitle = "With Loess Smoothing and 95% CI")
+#   
+```
+
+```{r}
+endpoints.PK %>%
+  mutate(product_type = if_else(drug=="Pill A", "Drug", "Gel"),
+         regimen = if_else(drug== "Gel B", "3 times/day", "1 time/day"),
+         product_dosage = case_when(
+           drug == "Pill A" ~ "Drug, 1 time/day",
+           drug == "Gel B" ~ "Gel, 3 times/day",
+           drug == "Gel C" ~"Gel, 1 time/day"
+         )) %>%
+  ggplot(aes(y = Adhere_rate, x = age))+
+  #geom_boxplot()+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+  geom_smooth(color="blue", method="loess")+
+  facet_grid(gender~product_type)+
+  theme_bw()+
+  ylab("Adherence Rate of a Treatment Period")+
+  xlab("Age")+
+  ggtitle(label = "Adherence Rate by Product Type", subtitle = "With Loess Smoothing and 95% CI")
+  
+```
+
+```{r}
+endpoints.PK %>%
+  mutate(product_type = if_else(drug=="Pill A", "Drug", "Gel"),
+         regimen = if_else(drug== "Gel B", "3 times/day", "1 time/day"),
+         product_dosage = case_when(
+           drug == "Pill A" ~ "Drug, 1 time/day",
+           drug == "Gel B" ~ "Gel, 3 times/day",
+           drug == "Gel C" ~"Gel, 1 time/day"
+         )) %>%
+  ggplot(aes(y = Adhere_rate, x = age))+
+  #geom_boxplot()+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+  geom_smooth(color="blue", method="loess")+
+  facet_grid(gender~regimen)+
+  theme_bw()+
+  ylab("Adherence Rate of a Treatment Period")+
+  xlab("Age")+
+  ggtitle(label = "Adherence Rate by Regimen", subtitle = "With Loess Smoothing and 95% CI")
+  
+```
+
+```{r}
+endpoints.PK %>%
+  mutate(product_type = if_else(drug=="Pill A", "Drug", "Gel"),
+         regimen = if_else(drug== "Gel B", "3 times/day", "1 time/day"),
+         product_dosage = case_when(
+           drug == "Pill A" ~ "Drug, 1 time/day",
+           drug == "Gel B" ~ "Gel, 3 times/day",
+           drug == "Gel C" ~"Gel, 1 time/day"
+         )) %>%
+  ggplot(aes(y = Adhere_rate, x = age))+
+  #geom_boxplot()+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+  geom_smooth(color="blue", method="loess")+
+  facet_grid(race~product_type)+
+  theme_bw()+
+  ylab("Adherence Rate of a Treatment Period")+
+  xlab("Age")+
+  ggtitle(label = "Adherence Rate by Product Type", subtitle = "With Loess Smoothing and 95% CI")
+  
+```
+
+```{r}
+endpoints.PK %>%
+  mutate(product_type = if_else(drug=="Pill A", "Drug", "Gel"),
+         regimen = if_else(drug== "Gel B", "3 times/day", "1 time/day"),
+         product_dosage = case_when(
+           drug == "Pill A" ~ "Drug, 1 time/day",
+           drug == "Gel B" ~ "Gel, 3 times/day",
+           drug == "Gel C" ~"Gel, 1 time/day"
+         )) %>%
+  ggplot(aes(y = Adhere_rate, x = age))+
+  #geom_boxplot()+
+  geom_point()+
+  geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+  geom_smooth(color="blue", method="loess")+
+  facet_grid(race~regimen)+
+  theme_bw()+
+  ylab("Adherence Rate of a Treatment Period")+
+  xlab("Age")+
+  ggtitle(label = "Adherence Rate by Regimen", subtitle = "With Loess Smoothing and 95% CI")
+  
+```
+
+```{r}
+endpoints.PK %>%
+  mutate(product_type = if_else(drug=="Pill A", "Drug", "Gel"),
+         regimen = if_else(drug== "Gel B", "3 times/day", "1 time/day"),
+         product_dosage = case_when(
+           drug == "Pill A" ~ "Drug, 1 time/day",
+           drug == "Gel B" ~ "Gel, 3 times/day",
+           drug == "Gel C" ~"Gel, 1 time/day"
+         )) %>%
+  ggplot(aes(y = Adhere_rate, x = race))+
+  geom_boxplot()+
+  facet_grid(gender~product_type)+
+  theme_bw()+
+  ylab("Adherence Rate of a Treatment Period")+
+  xlab("Race")+
+  ggtitle(label = "Adherence Rate by Product Type", subtitle = "With Loess Smoothing and 95% CI")
+  
+```
+```{r}
+endpoints.PK %>%
+  mutate(product_type = if_else(drug=="Pill A", "Drug", "Gel"),
+         regimen = if_else(drug== "Gel B", "3 times/day", "1 time/day"),
+         product_dosage = case_when(
+           drug == "Pill A" ~ "Drug, 1 time/day",
+           drug == "Gel B" ~ "Gel, 3 times/day",
+           drug == "Gel C" ~"Gel, 1 time/day"
+         )) %>%
+  ggplot(aes(y = Adhere_rate, x = race))+
+  geom_boxplot()+
+  facet_grid(gender~regimen)+
+  theme_bw()+
+  ylab("Adherence Rate of a Treatment Period")+
+  xlab("Race")+
+  ggtitle(label = "Adherence Rate by Regimen", subtitle = "With Loess Smoothing and 95% CI")
+  
+```
+
+
+
+```{r}
 endpoints.AE %>% 
   filter(AE ==1) %>%
   group_by(drug, week) %>%
@@ -305,11 +472,11 @@ ggtitle("Viral Load Difference vs. Previous Drug")
  endpoints.PK %>%
   ggplot(aes(y=dvalue, x=factor(drug, levels=c('Pill A','Gel B','Gel C'))))+
   geom_boxplot()+
-  facet_grid(.~measure)+
+  facet_grid(gender~measure)+
   xlab("Drug")+
   ylab("Viral Load Difference")+
   theme_bw()+
-  ggtitle("Viral Load Difference vs. Drug")
+  ggtitle("Viral Load Difference vs. Gender")
 ```
 
 
@@ -336,4 +503,42 @@ ggtitle("Viral Load Difference vs. Previous Drug")
   ylab("Mean Viral Load Difference")+
   ggtitle("Viral Load Difference vs. Adherence")+
   theme_bw()
+```
+```{r}
+ endpoints.PK %>%
+  ggplot(aes(y=dvalue, x=Adhere_sum))+
+  #geom_boxplot(aes(group = Adhere_sum))+
+  geom_point(size=0.8)+
+  geom_smooth(method = "lm", se = FALSE, show.legend = FALSE) +
+  facet_grid(drug~measure)+
+  xlab("# of Adherence Days in a Treatment Period")+
+  ylab("Viral Load Difference")+
+  ggtitle("Viral Load Difference vs. Adherence")+
+  theme_bw()
+```
+
+```{r}
+ endpoints.PK %>%
+  ggplot(aes(y=dvalue, x=age))+
+  #geom_boxplot(aes(group = age))+
+  geom_point(size=0.8)+
+  geom_smooth(method = "lm", se = FALSE, show.legend = FALSE) +
+  facet_grid(drug~measure)+
+  xlab("Age")+
+  ylab("Viral Load Difference")+
+  theme_bw()+
+  ggtitle("Viral Load Difference vs. Age")
+```
+
+```{r}
+ endpoints.PK %>%
+  ggplot(aes(y=dvalue, x=period))+
+  geom_smooth(method = "lm", se = FALSE, show.legend = FALSE) +
+  geom_line(alpha = 0.2, aes(group = ptid)) + 
+  geom_point(alpha = 0.1, size = 0.8) +
+  facet_grid(.~measure)+
+  xlab("Period")+
+  ylab("Viral Load Difference")+
+  theme_bw()+
+  ggtitle("Viral Load Difference vs. Period")
 ```
