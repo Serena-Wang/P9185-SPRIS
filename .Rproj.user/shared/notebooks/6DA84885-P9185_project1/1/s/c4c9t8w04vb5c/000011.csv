@@ -1,8 +1,0 @@
-"0","# AE response"
-"0","traj.AE <-"
-"0","  endpoints.AE.weeksum %>% "
-"0","  ggplot(aes(x = period, y = AE_ind)) +"
-"0","  geom_line(alpha = 0.2, aes(group = factor(ptid))) + "
-"0","  geom_point(alpha = 0.1, size = 0.8)"
-"0",""
-"0","traj.AE"
