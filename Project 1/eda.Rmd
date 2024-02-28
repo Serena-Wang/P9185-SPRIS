@@ -79,6 +79,7 @@ endpoints.Adhere %>%
   geom_point(alpha = 0.1, size = 0.8)+
   facet_grid(.~drug)+
   theme_bw() +
+  ylab("# of Adherence Days")+
   ggtitle("Adherence by Drug Over Weeks")
 
 ```
@@ -418,6 +419,14 @@ endpoints.AE %>%
 ```{r}
 endpoints.AE %>% 
   filter(AE ==1) %>%
+  group_by(drug_lag) %>%
+  summarise(c = n_distinct(ptid))
+
+```
+
+```{r}
+endpoints.AE %>% 
+  filter(AE ==1) %>%
   group_by(period,drug) %>%
   summarise(count = n_distinct(ptid)) %>%
   ggplot(aes(x=period, y=count))+
@@ -430,6 +439,86 @@ endpoints.AE %>%
   ggtitle("Number of Subjects Who Had AE")
 
 ```
+
+```{r}
+endpoints.AE.weeksum %>% 
+  merge(baseline.demo%>% select(ptid,age), by = c("ptid"), all = TRUE) %>%
+  filter(AE_ind ==1) %>%
+  group_by(race, gender,age.y) %>%
+  mutate(count = n_distinct(interaction(ptid, drug))) %>%
+  ungroup() %>%
+  group_by(age.y) %>%
+  mutate(total_age = n_distinct(interaction(ptid, drug))) %>%
+  ungroup()%>%
+  mutate(rate_age = count/total_age) %>%
+  ggplot(aes(x=age.y, y=rate_age))+
+  geom_point()+
+  #geom_line()+
+  #facet_grid(.~factor(drug, levels=c('Pill A','Gel B','Gel C')))+
+  facet_grid(race ~ gender)+
+  theme_bw()+
+  ylab("Number of Subjects")+
+  xlab("Age")+
+  ggtitle("Number of Subjects Who Had AE")
+
+```
+
+```{r}
+endpoints.AE.weeksum %>% 
+  group_by(gender,race) %>%
+  summarise(count = sum(as.numeric(AE_ind)-1)) %>%
+  ggplot(aes(x=gender, y=count,fill = race))+
+  geom_bar(stat = "identity",position = "dodge",alpha = 0.8)+
+  #geom_line()+
+  #facet_grid(.~factor(drug, levels=c('Pill A','Gel B','Gel C')))+
+  theme_bw()+
+  ylab("Number of Subjects in a Treatment Period")+
+  xlab("Gender")+
+  ggtitle("Number of Subjects Who Had AE in a Treatment Period")
+
+```
+
+
+```{r}
+endpoints.AE.weeksum %>% 
+  group_by(race, gender,drug) %>%
+  summarize(count = n_distinct(ptid),  
+            ae = sum(as.numeric(AE_ind)-1),
+            ae_rate = ae/count) %>%
+  ggplot(aes(x = drug, y = ae_rate))+
+  geom_bar(stat="identity")+
+  facet_grid(race~gender)+
+  theme_bw()+
+  ylab("% of Subjects")+
+  xlab("Drug")+
+  ggtitle("Proportion of Subjects Who Had AE When Taking Each Drug")
+```
+
+```{r}
+endpoints.AE.weeksum %>% 
+  merge(baseline.demo%>% select(ptid,age), by = c("ptid"), all = TRUE) %>%
+  group_by(ptid) %>%
+  mutate(ae = sum(as.numeric(AE_ind)-1)) %>%
+  ungroup() %>%
+  group_by(age.y) %>%
+  summarise(
+    count = n_distinct(ptid),
+    ae = ae) %>%
+  distinct() %>%
+  ggplot(aes(x=age.y, y=ae/count))+
+  geom_point()+
+  #geom_line()+
+  #facet_grid(.~factor(drug, levels=c('Pill A','Gel B','Gel C')))+
+  #facet_grid(race ~ gender)+
+  geom_hline(yintercept = 1, linetype = 2, color = "grey")+
+  geom_hline(yintercept = 0, linetype = 2, color = "grey")+
+  theme_bw()+
+  ylab("% of Subjects")+
+  xlab("Age")+
+  ggtitle("Proportion of Subjects Who Had AE at Each Age")
+
+```
+
 
 ```{r}
 set.seed(202)
