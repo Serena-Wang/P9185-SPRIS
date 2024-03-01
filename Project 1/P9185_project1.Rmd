@@ -144,12 +144,12 @@ endpoints.PK <-
   baseline.dat %>% 
   select(ptid, bviral0:sviral6) %>% 
   mutate(
-    dbvial1 = -bviral1 - bviral0,
-    dsvial1 = -sviral1 - sviral0,
-    dbvial2 = -bviral3 - bviral2,
-    dsvial2 = -sviral3 - sviral2,
-    dbvial3 = -bviral5 - bviral4,
-    dsvial3 = -sviral5 - sviral4
+    dbvial1 = bviral1 - bviral0,
+    dsvial1 = sviral1 - sviral0,
+    dbvial2 = bviral3 - bviral2,
+    dsvial2 = sviral3 - sviral2,
+    dbvial3 = bviral5 - bviral4,
+    dsvial3 = sviral5 - sviral4
   ) %>% 
   pivot_longer(
     cols = starts_with("d"),
@@ -239,7 +239,21 @@ endpoints.AE.weeksum <- left_join(endpoints.AE.weeksum, Adhere.demo)
 # centered age for better interpretation
 endpoints.AE.weeksum$age <- endpoints.AE.weeksum$age - mean(endpoints.AE.weeksum$age)
 AE.crossover.model <- glmer(AE_ind ~ period + seq2 + (1|ptid), data = endpoints.AE.weeksum, family = binomial)
-summary(AE.crossover.model)
+
+tbl.AE_crossover <- 
+  AE.crossover.model %>% 
+  tbl_regression(
+    estimate_fun = function(x) style_number(x, digits = 3), 
+    exponentiate = T,
+    label = list(
+      period ~ "Period",
+      seq2 ~ "Sequence 2"
+    ),
+    include = everything())
+
+# Convert tbl_regression to gt for more flexible handling
+gt.tbl.AE_crossover <- tbl.AE_crossover %>% as_gt()
+gt::gtsave(gt.tbl.AE_crossover, file = "./image/tbl.AE_crossover.png")
 ```
 No significant crossover effect found.
 
@@ -295,6 +309,22 @@ endpoints.Adhere <- left_join(endpoints.Adhere, Adhere.demo)
 endpoints.Adhere$age <- endpoints.Adhere$age - mean(endpoints.Adhere$age)
 Adhere.crossover.model <- glmer(cbind(Adhere, nonAdhere) ~ period + week + seq2 + (1|ptid), data = endpoints.Adhere, family = binomial)
 summary(Adhere.crossover.model)
+
+
+tbl.Adhere_crossover <- 
+  Adhere.crossover.model %>% 
+  tbl_regression(
+    estimate_fun = function(x) style_number(x, digits = 3), 
+    exponentiate = T,
+    label = list(
+      period ~ "Period",
+      seq2 ~ "Sequence 2"
+    ),
+    include = everything())
+
+# Convert tbl_regression to gt for more flexible handling
+gt.tbl.Adhere_crossover <- tbl.Adhere_crossover %>% as_gt()
+gt::gtsave(gt.tbl.Adhere_crossover, file = "./image/tbl.Adhere_crossover.png")
 ```
 No significant crossover effect found.
 
@@ -349,8 +379,42 @@ traj.PK
 endpoints.PK <- left_join(endpoints.PK, Adhere.demo)
 PK.crossover.model.bviral <- lmer(dvalue ~ period + seq2 + (1|ptid) , data = endpoints.PK %>% filter(measure == "Blood"))
 summary(PK.crossover.model.bviral)
+
+tbl.PK.crossover.model.bviral <- 
+  PK.crossover.model.bviral %>% 
+  tbl_regression(
+    estimate_fun = function(x) style_number(x, digits = 3), 
+    exponentiate = F,
+    label = list(
+      period ~ "Period",
+      seq2 ~ "Sequence 2"
+    ),
+    include = everything())
+
+# Convert tbl_regression to gt for more flexible handling
+gt.tbl.PK.crossover.model.bviral <- tbl.PK.crossover.model.bviral %>% as_gt()
+gt::gtsave(gt.tbl.PK.crossover.model.bviral, file = "./image/tbl.PK.crossover.model.bviral.png")
+
 PK.crossover.model.sviral <- lmer(dvalue ~ period + seq2 + (1|ptid) , data = endpoints.PK %>% filter(measure == "Skin"))
 summary(PK.crossover.model.sviral)
+
+tbl.PK.crossover.model.sviral <- 
+  PK.crossover.model.sviral %>% 
+  tbl_regression(
+    estimate_fun = function(x) style_number(x, digits = 3), 
+    exponentiate = F,
+    label = list(
+      period ~ "Period",
+      seq2 ~ "Sequence 2"
+    ),
+    include = everything())
+
+# Convert tbl_regression to gt for more flexible handling
+gt.tbl.PK.crossover.model.sviral <- tbl.PK.crossover.model.sviral %>% as_gt()
+gt::gtsave(gt.tbl.PK.crossover.model.sviral, file = "./image/tbl.PK.crossover.model.sviral.png")
+
+
+
 ```
 
 No significant crossover effect found for both type of measurements.
@@ -433,6 +497,50 @@ gt::gtsave(gt.demo, file = "./image/tbl_demo.png")
 ```
 
 ### Demographic difference 
+```{r}
+endpoints.Adhere.regimen <-
+  endpoints.Adhere %>% 
+  mutate(product = factor(ifelse(drug == "Pill A", "Pill", "Gel"), levels = c("Pill", "Gel")),
+         freq = factor(case_when(
+           drug == "Pill A" ~ "once",
+           drug == "Gel B" ~ "three times",
+           drug == "Gel C" ~ "once"
+         ), levels = c("once", "three times")))
+
+model.Adhere.product.1 <- geepack::geeglm(cbind(Adhere, nonAdhere) ~ period + week+ age*product + gender*product + race*product, data = endpoints.Adhere.regimen, family = binomial, id = ptid, corstr = "independence")
+
+#model.Adhere.product.2 <- glmtoolbox::glmgee(cbind(Adhere, nonAdhere) ~ period + age*product + gender*product + race*product, #data = endpoints.Adhere.regimen, family = binomial, id = ptid, corstr = "AR-M-dependent(1)")
+
+#model.Adhere.product.3 <- glmtoolbox::glmgee(cbind(Adhere, nonAdhere) ~ period + age*product + gender*product + race*product, #data = endpoints.Adhere.regimen, family = binomial, id = ptid, corstr = "Exchangeable")
+
+AIC(model.Adhere.product.1)
+#AIC(model.Adhere.product.2)
+#AIC(model.Adhere.product.3)
+
+
+
+summary(model.Adhere.product.1)
+#summary(model.Adhere.product.2)
+#summary(model.Adhere.product.3)
+broom::tidy(model.Adhere.product.1,exponentiate = TRUE,conf.int = TRUE) %>% kable() %>% kable_styling() %>%
+  save_kable(file = "./image/ad_product_type_model.png")
+```
+
+```{r}
+model.Adhere.freq.12 <- geepack::geeglm(cbind(Adhere, nonAdhere) ~ period + week+ age*freq + gender*freq + race*freq, data = endpoints.Adhere.regimen, family = binomial, id = ptid, corstr = "independence")
+# model.Adhere.freq.2 <- glmtoolbox::glmgee(cbind(Adhere, nonAdhere) ~ period + age*freq + gender*freq + race*freq, data = endpoints.Adhere.regimen, family = binomial, id = ptid, corstr = "AR-M-dependent(1)")
+# model.Adhere.freq.3 <- glmtoolbox::glmgee(cbind(Adhere, nonAdhere) ~ period + age*freq + gender*freq + race*freq, data = endpoints.Adhere.regimen, family = binomial, id = ptid, corstr = "Exchangeable")
+
+AIC(model.Adhere.freq.12)
+# AIC(model.Adhere.freq.2)
+# AIC(model.Adhere.freq.3)
+
+#summary(model.Adhere.freq.1) 
+broom::tidy(model.Adhere.freq.12,exponentiate = TRUE,conf.int = TRUE) %>% kable()%>% kable_styling() %>%
+  save_kable(file = "./image/ad_regimen_model.png")
+# summary(model.Adhere.freq.1)
+# summary(model.Adhere.freq.1)
+```
 
 ## Table one
 
