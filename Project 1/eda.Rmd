@@ -353,7 +353,7 @@ endpoints.PK %>%
   theme_bw()+
   ylab("Adherence Rate of a Treatment Period")+
   xlab("Race")+
-  ggtitle(label = "Adherence Rate by Product Type", subtitle = "With Loess Smoothing and 95% CI")
+  ggtitle(label = "Adherence Rate by Product Type")
   
 ```
 ```{r}
@@ -371,7 +371,7 @@ endpoints.PK %>%
   theme_bw()+
   ylab("Adherence Rate of a Treatment Period")+
   xlab("Race")+
-  ggtitle(label = "Adherence Rate by Regimen", subtitle = "With Loess Smoothing and 95% CI")
+  ggtitle(label = "Adherence Rate by Regimen")
   
 ```
 
